@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: separatas_db
     ports:
       - "5433:5432"
+    volumes:
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   backend-api:
     build: ./backend
