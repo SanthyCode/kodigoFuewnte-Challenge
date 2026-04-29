@@ -42,8 +42,16 @@ app.MapScalarApiReference(options =>
     options.WithTitle("API de Separatas - Kódigo Fuente");
 });
 
+// ¡NUEVO! 1. Redirigir la raíz (http://localhost:5000) hacia la documentación
+app.MapGet("/", () => Results.Redirect("/scalar/v1"));
+
+// ¡NUEVO! 2. Crear un alias para que la ruta de tu README funcione
+app.MapGet("/api/docs", () => Results.Redirect("/scalar/v1"));
+
 app.UseCors("AllowReact");
 app.UseAuthorization();
 app.MapControllers();
+
+app.Run();
 
 app.Run();
