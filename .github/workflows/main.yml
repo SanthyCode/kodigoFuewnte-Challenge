@@ -1,0 +1,54 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 9.0.x
+        
+    - name: Setup Node.js (Para Frontend Linter)
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    # --- 1. LINTERS ---
+    - name: Run Backend Linter
+      run: dotnet format backend/Kodigo.API/Kodigo.API.csproj --verify-no-changes
+
+    - name: Run Frontend Linter
+      run: |
+        cd frontend
+        npm install
+        npm run lint
+
+    # --- 2. TESTS UNITARIOS ---
+    - name: Run Backend Unit Tests
+      run: dotnet test backend/Kodigo.Tests/Kodigo.Tests.csproj
+
+    # --- 3. CONSTRUCCIÓN DE IMÁGENES DOCKER ---
+    - name: Build Docker Images
+      run: |
+        docker build -t ghcr.io/${{ github.repository }}/backend-api:latest ./backend
+        docker build -t ghcr.io/${{ github.repository }}/frontend:latest ./frontend
+
+    # --- 4. PUBLICACIÓN EN GITHUB PACKAGES ---
+    - name: Log in to GHCR
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push Images
+      run: |
+        docker push ghcr.io/${{ github.repository }}/backend-api:latest
+        docker push ghcr.io/${{ github.repository }}/frontend:latest

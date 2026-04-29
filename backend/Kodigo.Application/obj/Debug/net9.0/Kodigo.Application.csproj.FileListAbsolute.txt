@@ -1,0 +1,16 @@
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\bin\Debug\net9.0\Kodigo.Application.deps.json
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\bin\Debug\net9.0\Kodigo.Application.dll
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\bin\Debug\net9.0\Kodigo.Application.pdb
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\bin\Debug\net9.0\Kodigo.Domain.dll
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\bin\Debug\net9.0\Kodigo.Domain.pdb
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.Application.csproj.AssemblyReference.cache
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.Application.AssemblyInfoInputs.cache
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.Application.AssemblyInfo.cs
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.Application.csproj.CoreCompileInputs.cache
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.Application.sourcelink.json
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.A.E6C51828.Up2Date
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.Application.dll
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\refint\Kodigo.Application.dll
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\Kodigo.Application.pdb
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Application\obj\Debug\net9.0\ref\Kodigo.Application.dll

@@ -2,36 +2,37 @@ import React, { useState, useEffect } from 'react';
 import styles from '../../styles/SeparataForm.module.scss';
 import { useValidateSeparataMutation, useCreateSeparataMutation } from '../../store/separataApi';
 
-export const SeparataForm = () => {
-  const PRODUCTS = [
-    { id: '3fa85f64-5717-4562-b3fc-2c963f66afa6', name: 'Laptop Pro' },
-    { id: '11111111-2222-3333-4444-555555555555', name: 'Mouse Gamer' },
-    { id: '99999999-8888-7777-6666-555555555555', name: 'Teclado Mecánico' }
-  ];
+// Simulamos los productos de la base de datos
+const PRODUCTS = [
+  { id: '3fa85f64-5717-4562-b3fc-2c963f66afa6', name: 'Laptop Pro' },
+  { id: '11111111-2222-3333-4444-555555555555', name: 'Mouse Gamer' },
+  { id: '99999999-8888-7777-6666-555555555555', name: 'Teclado Mecánico' }
+];
 
-  // 1. Estado local SÓLO para lo que el usuario digita
-  const [formData, setFormData] = useState({ 
+export const SeparataForm = () => {
+  // Estado local con el array de items (productos)
+  const [formData, setFormData] = useState({
     name: '',
     startDate: '',
     endDate: '',
-    items: [{ productId: PRODUCTS[0].id, promotionType: 'Percentage', promotionValue: 10 }]
+    items: [{ productId: PRODUCTS[0].id, promotionType: 'Percentage', promotionValue: 0 }]
   });
+
   const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
 
+  // Hooks de RTK Query
   const [validate, { data: validationResult, isLoading: isValidating }] = useValidateSeparataMutation();
   const [create, { isLoading: isCreating }] = useCreateSeparataMutation();
 
-
+  // Validación en tiempo real (Debounce)
   useEffect(() => {
-    if (submitStatus.type !== null) setSubmitStatus({ type: null, message: '' });
-
     const timeoutId = setTimeout(() => {
       if (formData.name && formData.startDate && formData.endDate) {
-        // Redux se encarga de la petición HTTP
         validate({
           name: formData.name,
           startDate: new Date(formData.startDate).toISOString(),
-          endDate: new Date(formData.endDate).toISOString()
+          endDate: new Date(formData.endDate).toISOString(),
+          items: formData.items
         });
       }
     }, 500);
@@ -42,23 +43,52 @@ export const SeparataForm = () => {
   const isFormValid = validationResult?.isValid ?? false;
   const serverErrors = validationResult?.errors ?? [];
 
+  const handleItemChange = (index: number, field: string, value: string | number) => {
+    if (submitStatus.type !== null) setSubmitStatus({ type: null, message: '' });
+
+    const newItems = [...formData.items];
+    newItems[index] = { ...newItems[index], [field]: value };
+    setFormData({ ...formData, items: newItems });
+  };
+
+  const addItem = () => {
+    if (submitStatus.type !== null) setSubmitStatus({ type: null, message: '' });
+    setFormData({
+      ...formData,
+      items: [...formData.items, { productId: PRODUCTS[0].id, promotionType: 'Percentage', promotionValue: 0 }]
+    });
+  };
+
+  const removeItem = (index: number) => {
+    if (submitStatus.type !== null) setSubmitStatus({ type: null, message: '' });
+    const newItems = formData.items.filter((_, i) => i !== index);
+    setFormData({ ...formData, items: newItems });
+  };
+
+  // Envío del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
     setSubmitStatus({ type: null, message: '' });
 
     try {
-      // Usamos la mutación de Redux para crear
       const response = await create({
         name: formData.name,
         startDate: new Date(formData.startDate).toISOString(),
-        endDate: new Date(formData.endDate).toISOString()
-      }).unwrap(); // unwrap() extrae el payload directo o lanza un error si falla
+        endDate: new Date(formData.endDate).toISOString(),
+        items: formData.items
+      }).unwrap();
 
       setSubmitStatus({ type: 'success', message: "✅ " + response.mensaje });
-      setFormData({ name: '', startDate: '', endDate: '', items: [{ productId: PRODUCTS[0].id, promotionType: 'Percentage', promotionValue: 10 }] });
 
-    } catch (error: any) {
+      setFormData({
+        name: '', startDate: '', endDate: '',
+        items: [{ productId: PRODUCTS[0].id, promotionType: 'Percentage', promotionValue: 0 }]
+      });
+
+    } catch (err) {
+      // Reemplazamos el ': any' por una conversión de tipo segura de TypeScript
+      const error = err as { data?: { mensaje?: string } };
       const errorMsg = error?.data?.mensaje || "Error al conectar con el servidor.";
       setSubmitStatus({ type: 'error', message: "❌ " + errorMsg });
     }
@@ -101,6 +131,57 @@ export const SeparataForm = () => {
           </div>
         </div>
 
+        {/* --- SECCIÓN DINÁMICA DE PRODUCTOS --- */}
+        <div className={styles.productsSection}>
+          <h3>Productos en Oferta</h3>
+
+          {formData.items.map((item, index) => (
+            <div key={index} className={styles.productRow}>
+              {/* Selección del Producto */}
+              <select
+                value={item.productId}
+                onChange={e => handleItemChange(index, 'productId', e.target.value)}
+              >
+                {PRODUCTS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+
+              {/* Selección del TIPO de Descuento (Patrón Strategy) */}
+              <select
+                value={item.promotionType}
+                onChange={e => handleItemChange(index, 'promotionType', e.target.value)}
+              >
+                <option value="Percentage">Porcentaje (%)</option>
+                <option value="Direct">Monto Fijo ($)</option>
+              </select>
+
+              {/* Valor del descuento */}
+              <input
+                type="number"
+                placeholder="Valor"
+                min="0"
+                value={item.promotionValue === 0 ? '' : item.promotionValue}
+                onChange={e => handleItemChange(index, 'promotionValue', Number(e.target.value))}
+              />
+
+              {/* Botón para eliminar la fila (solo si hay más de 1 producto) */}
+              {formData.items.length > 1 && (
+                <button
+                  type="button"
+                  className={styles.btnRemove}
+                  onClick={() => removeItem(index)}
+                  title="Quitar producto"
+                >
+                  X
+                </button>
+              )}
+            </div>
+          ))}
+
+          <button type="button" className={styles.btnAddProduct} onClick={addItem}>
+            + Añadir otro producto
+          </button>
+        </div>
+
         {isValidating && <span style={{ color: 'gray', fontSize: '0.8rem' }}>Validando en el servidor...</span>}
 
         {serverErrors.length > 0 && (
@@ -113,30 +194,6 @@ export const SeparataForm = () => {
             </ul>
           </div>
         )}
-
-        <div className={styles.productsSection}>
-          <h3>Productos en Oferta</h3>
-          {formData.items.map((item, index) => (
-            <div key={index} className={styles.productRow}>
-              <select onChange={e => {
-                const newItems = [...formData.items];
-                newItems[index].productId = e.target.value;
-                setFormData({ ...formData, items: newItems });
-              }}>
-                {PRODUCTS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
-              <input
-                type="number"
-                placeholder="Valor"
-                onChange={e => {
-                  const newItems = [...formData.items];
-                  newItems[index].promotionValue = Number(e.target.value);
-                  setFormData({ ...formData, items: newItems });
-                }}
-              />
-            </div>
-          ))}
-        </div>
 
         <button
           type="submit"

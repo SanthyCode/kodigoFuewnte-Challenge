@@ -2,7 +2,7 @@ using Kodigo.Application.Strategies;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
-using Kodigo.Infrastructure;        
+using Kodigo.Infrastructure;
 using Kodigo.Application.Validators;
 using Kodigo.Application.Interfaces;
 using Kodigo.Infrastructure.Repositories;
@@ -37,7 +37,7 @@ builder.Services.AddScoped<PromotionService>();
 var app = builder.Build();
 
 app.MapOpenApi();
-app.MapScalarApiReference(options => 
+app.MapScalarApiReference(options =>
 {
     options.WithTitle("API de Separatas - Kódigo Fuente");
 });

@@ -18,4 +18,9 @@ public class SeparataRepository : ISeparataRepository
     {
         return await _context.Separatas.ToListAsync();
     }
+
+    public async Task<Product?> GetProductByIdAsync(Guid productId)
+    {
+        return await _context.Products.FindAsync(productId);
+    }
 }

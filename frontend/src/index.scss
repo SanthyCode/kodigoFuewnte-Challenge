@@ -9,6 +9,11 @@
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
   --error-msg: #c53030;
+  --success-msg: #2f855a;
+  --success-bg: rgba(48, 154, 61, 0.08);
+  --warning-msg: #d69e2e;
+  --warning-bg: rgba(214, 158, 46, 0.08);
+  --form-gradient: linear-gradient(135deg, #fafbff 0%, rgba(170, 59, 255, 0.12) 100%);
 
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
@@ -43,6 +48,11 @@
     --accent-bg: rgba(192, 132, 252, 0.15);
     --accent-border: rgba(192, 132, 252, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
+    --success-msg: #68d391;
+    --success-bg: rgba(104, 211, 145, 0.1);
+    --warning-msg: #f6ad55;
+    --warning-bg: rgba(246, 173, 85, 0.1);
+    --form-gradient: linear-gradient(135deg, #16171d 0%, rgba(88, 13, 162, 0.2) 100%);
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }

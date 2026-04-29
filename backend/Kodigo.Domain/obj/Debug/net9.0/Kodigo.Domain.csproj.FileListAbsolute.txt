@@ -1,0 +1,12 @@
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\bin\Debug\net9.0\Kodigo.Domain.deps.json
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\bin\Debug\net9.0\Kodigo.Domain.dll
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\bin\Debug\net9.0\Kodigo.Domain.pdb
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\Kodigo.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\Kodigo.Domain.AssemblyInfoInputs.cache
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\Kodigo.Domain.AssemblyInfo.cs
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\Kodigo.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\Kodigo.Domain.sourcelink.json
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\Kodigo.Domain.dll
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\refint\Kodigo.Domain.dll
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\Kodigo.Domain.pdb
+C:\Users\Santy\Documents\KodigoFuente-Challenge\backend\Kodigo.Domain\obj\Debug\net9.0\ref\Kodigo.Domain.dll

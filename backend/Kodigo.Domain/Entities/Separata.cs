@@ -8,9 +8,11 @@ public class Separata {
     public List<SeparataItem> Items { get; set; } = new();
 }
 
-public class SeparataItem {
+public class SeparataItem
+{
     public Guid Id { get; set; }
+    public Guid SeparataId { get; set; }
     public Guid ProductId { get; set; }
-    public string PromotionType { get; set; } = string.Empty; // "Direct" o "Percentage"
+    public string PromotionType { get; set; } = string.Empty;
     public decimal PromotionValue { get; set; }
 }
