@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: separatas_db
+    ports:
+      - "5433:5432"
+
+  backend-api:
+    build: ./backend
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=separatas_db;Username=admin;Password=password123
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+    ports:
+      - "5000:8080"
+
+  frontend-app:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend-api
