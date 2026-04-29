@@ -20,43 +20,49 @@ public class SeparataValidator
     {
         var errors = new List<string>();
 
-        // 1. Validaciones de Nombre y Fechas
+        // 1. Validaciones de Nombre
         if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length < 3)
             errors.Add("El nombre es demasiado corto o inválido.");
         else
         {
             var normalizedRequestName = NormalizeName(request.Name);
             var separatasExistentes = await _repository.GetAllAsync();
-            
+
             if (separatasExistentes.Any(s => NormalizeName(s.Name) == normalizedRequestName))
                 errors.Add("Ya existe una campaña con este nombre.");
-
-            if (request.EndDate > request.StartDate)
-            {
-                bool existeSolapamiento = separatasExistentes.Any(s => 
-                    request.StartDate < s.EndDate && request.EndDate > s.StartDate);
-
-                if (existeSolapamiento)
-                    errors.Add("El rango de fechas se solapa con una oferta existente.");
-            }
         }
 
+        // 2. Validaciones Lógicas de Fechas
         if (request.EndDate <= request.StartDate)
-            errors.Add("La fecha de fin no puede ser anterior o igual al inicio.");
-
-        // 2. ¡NUEVA REGLA!: Validación Financiera de los Productos
-        if (request.Items != null && request.Items.Any())
         {
+            errors.Add("La fecha de fin no puede ser anterior o igual al inicio.");
+        }
+
+        // 3. ¡NUEVA LÓGICA DE SOLAPAMIENTO POR PRODUCTO!
+        if (request.EndDate > request.StartDate && request.Items != null && request.Items.Any())
+        {
+            // Traemos todos los items de la base de datos que ya están ocupados en estas fechas
+            var overlappingItems = await _repository.GetOverlappingItemsAsync(request.StartDate, request.EndDate);
+
             foreach (var item in request.Items)
             {
-                var product = await _repository.GetProductByIdAsync(item.ProductId);
-                
-                if (product != null && item.PromotionType == "Direct")
+                // Si el producto que intentamos guardar ya está en la lista de cruzados...
+                if (overlappingItems.Any(oi => oi.ProductId == item.ProductId))
                 {
-                    // Comprobamos que el descuento no quiebre la empresa
-                    if (item.PromotionValue > product.BasePrice)
+                    var product = await _repository.GetProductByIdAsync(item.ProductId);
+                    string productName = product != null ? product.Name : "Un producto";
+
+                    // Mostramos un error súper específico al usuario
+                    errors.Add($"El producto '{productName}' ya tiene una oferta activa en este rango de fechas.");
+                }
+
+                // (Mantenemos la validación financiera que hicimos antes)
+                var productForFinancialCheck = await _repository.GetProductByIdAsync(item.ProductId);
+                if (productForFinancialCheck != null && item.PromotionType == "Direct")
+                {
+                    if (item.PromotionValue > productForFinancialCheck.BasePrice)
                     {
-                        errors.Add($"El descuento de ${item.PromotionValue} supera el precio base de '{product.Name}' (${product.BasePrice}).");
+                        errors.Add($"El descuento de ${item.PromotionValue} supera el precio base de '{productForFinancialCheck.Name}' (${productForFinancialCheck.BasePrice}).");
                     }
                 }
             }
